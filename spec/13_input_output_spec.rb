@@ -48,7 +48,7 @@ describe NumberGame do
       # Write a similar test to the one above, that uses a custom matcher
       # instead of <, >, =.
       matcher :be_between_zero_and_nine do
-        match { |num| num.between?(0, 9) }
+        match { |number| number.between?(0, 9) }
       end
 
       # remove the 'x' before running this test
@@ -81,10 +81,11 @@ describe NumberGame do
     # Create a new instance of NumberGame and write a test for when the @guess
     # does not equal @solution.
     context 'when user guess is not correct' do
-      subject(:game_not_end) { described_class.new(5, '7') }
+      subject(:game_mid) { described_class.new(5, '7') }
 
+      # remove the 'x' before running this test
       it 'is not game over' do
-        expect(game_not_end).not_to be_game_over
+        expect(game_mid).not_to be_game_over
       end
     end
   end
@@ -115,7 +116,7 @@ describe NumberGame do
       it 'returns nil' do
         user_input = 'a'
         verified_input = game_check.verify_input(user_input)
-        expect(verified_input).to eq(nil)
+        expect(verified_input).to be_nil
       end
     end
   end
@@ -175,10 +176,10 @@ describe NumberGame do
     # Write a test for the following context.
     context 'when user inputs two incorrect values, then a valid input' do
       before do
-        first_incorrect_value = 'first'
-        second_incorrect_value = 'second'
-        correct_value = '8'
-        allow(game_loop).to receive(:player_input).and_return(first_incorrect_value, second_incorrect_value, correct_value)
+        invalid_input1 = 'first'
+        invalid_input2 = '*$/'
+        valid_input = '8'
+        allow(game_loop).to receive(:player_input).and_return(invalid_input1, invalid_input2, valid_input)
       end
 
       it 'completes loop and displays error message twice' do
@@ -214,11 +215,30 @@ describe NumberGame do
     # Create a new instance of NumberGame, with specific values for @solution,
     # @guess, and @count
     context 'when count is 2-3' do
-      subject(:game) { NumberGame.new('5', 5, 3) }
-      # remove the 'x' before running this test
-      it 'outputs correct phrase' do
-        congrats_phrase = "Congratulations! You picked the random number in 3 guesses!\n"
-        expect { game.final_message }.to output(congrats_phrase).to_stdout
+      # subject(:game_three) { described_class.new('5', 5, 3) }
+
+      # # remove the 'x' before running this test
+      # it 'outputs correct phrase' do
+      #   congrats_phrase = "Congratulations! You picked the random number in 3 guesses!\n"
+      #   expect { game_three.final_message }.to output(congrats_phrase).to_stdout
+      # end
+
+      context 'when count is 2' do
+        subject(:game_two) { described_class.new('5', 5, 2) }
+
+        it 'outputs correct phrase' do
+          congrats_phrase = "Congratulations! You picked the random number in 2 guesses!\n"
+          expect { game_two.final_message }.to output(congrats_phrase).to_stdout
+        end
+      end
+
+      context 'when count is 3' do
+        subject(:game_three) { described_class.new('5', 5, 3) }
+
+        it 'outputs correct phrase' do
+          congrats_phrase = "Congratulations! You picked the random number in 3 guesses!\n"
+          expect { game_three.final_message }.to output(congrats_phrase).to_stdout
+        end
       end
     end
 
@@ -226,11 +246,30 @@ describe NumberGame do
 
     # Write a test for the following context.
     context 'when count is 4 and over' do
-      subject(:game) { NumberGame.new('5', 5, 7) }
-      # remove the 'x' before running this test
-      it 'outputs correct phrase' do
-        hard_phrase = "That was hard. It took you 7 guesses!\n"
-        expect { game.final_message }.to output(hard_phrase).to_stdout
+      # subject(:game_seven) { described_class.new('5', 5, 7) }
+
+      # # remove the 'x' before running this test
+      # it 'outputs correct phrase' do
+      #   hard_phrase = "That was hard. It took you 7 guesses!\n"
+      #   expect { game_seven.final_message }.to output(hard_phrase).to_stdout
+      # end
+
+      context 'when count is 4' do
+        subject(:game_four) { described_class.new('5', 5, 4) }
+
+        it 'outputs correct phrase' do
+          hard_phrase = "That was hard. It took you 4 guesses!\n"
+          expect { game_four.final_message }.to output(hard_phrase).to_stdout
+        end
+      end
+
+      context 'when count is 7' do
+        subject(:game_seven) { described_class.new('5', 5, 7) }
+
+        it 'outputs correct phrase' do
+          hard_phrase = "That was hard. It took you 7 guesses!\n"
+          expect { game_seven.final_message }.to output(hard_phrase).to_stdout
+        end
       end
     end
   end
